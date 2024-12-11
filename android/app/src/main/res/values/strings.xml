@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">frontend</string>
 </resources>
+
+<resources>
+    <string name="app_name">PocketPilot</string>
+</resources>
