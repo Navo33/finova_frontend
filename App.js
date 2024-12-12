@@ -8,21 +8,13 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-} from 'react-native';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+//import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Header = () => (
   <View style={styles.header}>
     <View style={styles.headerCenter}>
       {/* <Icon name="chevron-left" size={24} color="#ff0000" /> */}
-      <Text style={styles.headerTitle}>Dec 2025</Text>
+      <Text style={styles.headerTitle}>Dec 2023</Text>
       <Text style={styles.headerTitle}>Dec 2024</Text>
       {/* <Icon name="chevron-right" size={24} color="#ff0000" /> */}
     </View>
@@ -65,14 +57,13 @@ const SummaryCard = () => (
       <Text style={styles.summaryLabel}>Total</Text>
     </View>
     <View style={styles.summaryRow}>
-      <Text style={styles.summaryIncome}>115,000.00</Text>
+      <Text style={styles.summaryIncome}>1,000.00</Text>
       <Text style={styles.summaryExpense}>10,000.00</Text>
       <Text style={styles.summaryTotal}>105,000.00</Text>
     </View>
   </View>
 );
 
-const TransactionItem = ({ category, title, subtitle, amount, isExpense }) => (
 const TransactionItem = ({category, title, subtitle, amount, isExpense}) => (
   <View style={styles.transactionItem}>
     <View style={styles.transactionLeft}>
@@ -90,7 +81,6 @@ const TransactionItem = ({category, title, subtitle, amount, isExpense}) => (
         isExpense ? styles.expenseText : styles.incomeText,
       ]}
     >
-      ]}>
       £ {amount}
     </Text>
   </View>
