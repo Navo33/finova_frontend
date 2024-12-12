@@ -1,13 +1,5 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
   View,
   Text,
   ScrollView,
@@ -16,25 +8,24 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Header = () => (
   <View style={styles.header}>
     <View style={styles.headerCenter}>
-      {/* <Icon name="chevron-left" size={24} color="#ff0000" /> */}
-      <Text style={styles.headerTitle}>Dec 2025</Text>
+      <Icon name="chevron-left" size={24} color="#ff0000" />
       <Text style={styles.headerTitle}>Dec 2024</Text>
-      {/* <Icon name="chevron-right" size={24} color="#ff0000" /> */}
+      <Icon name="chevron-right" size={24} color="#ff0000" />
     </View>
     <View style={styles.headerRight}>
       <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="bookmark-outline" size={24} color="#ff0000" /> */}
+        <Icon name="bookmark-outline" size={24} color="#ff0000" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="search" size={24} color="#ff0000" /> */}
+        <Icon name="search" size={24} color="#ff0000" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="query-stats" size={24} color="#ff0000" /> */}
+        <Icon name="query-stats" size={24} color="#ff0000" />
       </TouchableOpacity>
     </View>
   </View>
@@ -72,7 +63,6 @@ const SummaryCard = () => (
   </View>
 );
 
-const TransactionItem = ({ category, title, subtitle, amount, isExpense }) => (
 const TransactionItem = ({category, title, subtitle, amount, isExpense}) => (
   <View style={styles.transactionItem}>
     <View style={styles.transactionLeft}>
@@ -88,8 +78,6 @@ const TransactionItem = ({category, title, subtitle, amount, isExpense}) => (
       style={[
         styles.transactionAmount,
         isExpense ? styles.expenseText : styles.incomeText,
-      ]}
-    >
       ]}>
       £ {amount}
     </Text>
@@ -99,25 +87,25 @@ const TransactionItem = ({category, title, subtitle, amount, isExpense}) => (
 const BottomTabBar = () => (
   <View style={styles.bottomTabBar}>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="receipt" size={24} color="#FF5757" /> */}
+      <Icon name="receipt" size={24} color="#FF5757" />
       <Text style={styles.bottomTabTextActive}>Trans.</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="bar-chart" size={24} color="#999" /> */}
+      <Icon name="bar-chart" size={24} color="#999" />
       <Text style={styles.bottomTabText}>Stats</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="account-balance-wallet" size={24} color="#999" /> */}
+      <Icon name="account-balance-wallet" size={24} color="#999" />
       <Text style={styles.bottomTabText}>Accounts</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="more-horiz" size={24} color="#999" /> */}
+      <Icon name="more-horiz" size={24} color="#999" />
       <Text style={styles.bottomTabText}>More</Text>
     </TouchableOpacity>
   </View>
 );
 
-const App = () => {
+const Dashboard = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -160,14 +148,14 @@ const App = () => {
         />
       </ScrollView>
       <TouchableOpacity style={styles.fab}>
-        {/* <Icon name="add" size={24} color="white" /> */}
+        <Icon name="add" size={24} color="white" />
       </TouchableOpacity>
       <BottomTabBar />
     </SafeAreaView>
   );
 };
 
-export default App;
+export default Dashboard;
 
 const styles = StyleSheet.create({
   container: {
