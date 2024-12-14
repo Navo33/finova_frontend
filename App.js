@@ -8,25 +8,30 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-//import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FeatherIcons from 'react-native-vector-icons/Feather';
 
 const Header = () => (
   <View style={styles.header}>
     <View style={styles.headerCenter}>
-      {/* <Icon name="chevron-left" size={24} color="#ff0000" /> */}
-      <Text style={styles.headerTitle}>Dec 2023</Text>
+      <TouchableOpacity>
+        <Icon name="angle-left" size={24} color="#ff0000" iconStyle="solid" />
+      </TouchableOpacity>
       <Text style={styles.headerTitle}>Dec 2024</Text>
-      {/* <Icon name="chevron-right" size={24} color="#ff0000" /> */}
+      <TouchableOpacity>
+        <Icon name="angle-right" size={24} color="#ff0000" iconStyle="solid" />
+      </TouchableOpacity>
     </View>
     <View style={styles.headerRight}>
       <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="bookmark-outline" size={24} color="#ff0000" /> */}
+        <MaterialIcons name="bookmark" size={20} color="#ff0000" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="search" size={24} color="#ff0000" /> */}
+        <MaterialIcons name="search" size={20} color="#ff0000" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="query-stats" size={24} color="#ff0000" /> */}
+        <MaterialIcons name="query-stats" size={20} color="#ff0000" />
       </TouchableOpacity>
     </View>
   </View>
@@ -52,14 +57,18 @@ const TabBar = () => (
 const SummaryCard = () => (
   <View style={styles.summaryCard}>
     <View style={styles.summaryRow}>
-      <Text style={styles.summaryLabel}>Income</Text>
-      <Text style={styles.summaryLabel}>Expenses</Text>
-      <Text style={styles.summaryLabel}>Total</Text>
-    </View>
-    <View style={styles.summaryRow}>
-      <Text style={styles.summaryIncome}>1,000.00</Text>
-      <Text style={styles.summaryExpense}>10,000.00</Text>
-      <Text style={styles.summaryTotal}>105,000.00</Text>
+      <View style={styles.summaryColumn}>
+        <Text style={styles.summaryLabel}>Income</Text>
+        <Text style={styles.summaryIncome}>£1,000.00</Text>
+      </View>
+      <View style={styles.summaryColumn}>
+        <Text style={styles.summaryLabel}>Expenses</Text>
+        <Text style={styles.summaryExpense}>£10,000.00</Text>
+      </View>
+      <View style={styles.summaryColumn}>
+        <Text style={styles.summaryLabel}>Total</Text>
+        <Text style={styles.summaryTotal}>£105,000.00</Text>
+      </View>
     </View>
   </View>
 );
@@ -71,43 +80,48 @@ const TransactionItem = ({category, title, subtitle, amount, isExpense}) => (
         <Text>{category}</Text>
       </View>
       <View style={styles.transactionDetails}>
-        <Text style={styles.transactionTitle}>{title}</Text>
-        <Text style={styles.transactionSubtitle}>{subtitle}</Text>
+        <Text style={styles.transactionTitle} numberOfLines={1}>
+          {title}
+        </Text>
+        <Text style={styles.transactionSubtitle} numberOfLines={1}>
+          {subtitle}
+        </Text>
       </View>
     </View>
-    <Text
-      style={[
-        styles.transactionAmount,
-        isExpense ? styles.expenseText : styles.incomeText,
-      ]}
-    >
-      £ {amount}
-    </Text>
+    <View style={styles.amountContainer}>
+      <Text
+        style={[
+          styles.transactionAmount,
+          isExpense ? styles.expenseText : styles.incomeText,
+        ]}>
+        £{amount}
+      </Text>
+    </View>
   </View>
 );
 
 const BottomTabBar = () => (
   <View style={styles.bottomTabBar}>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="receipt" size={24} color="#FF5757" /> */}
+      <MaterialIcons name="receipt-long" size={27} color="#FF5757" />
       <Text style={styles.bottomTabTextActive}>Trans.</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="bar-chart" size={24} color="#999" /> */}
+      <MaterialIcons name="bar-chart" size={27} color="#999" />
       <Text style={styles.bottomTabText}>Stats</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="account-balance-wallet" size={24} color="#999" /> */}
+      <MaterialIcons name="account-balance-wallet" size={24} color="#999" />
       <Text style={styles.bottomTabText}>Accounts</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="more-horiz" size={24} color="#999" /> */}
+      <MaterialIcons name="more-horiz" size={24} color="#999" />
       <Text style={styles.bottomTabText}>More</Text>
     </TouchableOpacity>
   </View>
 );
 
-const App = () => {
+const Dashboard = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -150,14 +164,12 @@ const App = () => {
         />
       </ScrollView>
       <TouchableOpacity style={styles.fab}>
-        {/* <Icon name="add" size={24} color="white" /> */}
+        <FeatherIcons name="plus" size={24} color="white" />
       </TouchableOpacity>
       <BottomTabBar />
     </SafeAreaView>
   );
 };
-
-export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -227,30 +239,35 @@ const styles = StyleSheet.create({
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    alignItems: 'center',
+  },
+  summaryColumn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 4,
   },
   summaryLabel: {
     color: '#666',
-    flex: 1,
-    textAlign: 'center',
+    fontSize: 14,
+    marginBottom: 8,
   },
   summaryIncome: {
     color: '#4CAF50',
-    flex: 1,
-    textAlign: 'center',
     fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
   summaryExpense: {
     color: '#F44336',
-    flex: 1,
-    textAlign: 'center',
     fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
   summaryTotal: {
     color: '#0000FF',
-    flex: 1,
-    textAlign: 'center',
     fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
   dateHeader: {
     flexDirection: 'row',
@@ -284,6 +301,8 @@ const styles = StyleSheet.create({
   transactionLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    marginRight: 16,
   },
   categoryIcon: {
     width: 40,
@@ -293,9 +312,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
+    flexShrink: 0,
   },
   transactionDetails: {
     flex: 1,
+    marginRight: 8,
   },
   transactionTitle: {
     fontSize: 16,
@@ -304,6 +325,11 @@ const styles = StyleSheet.create({
   transactionSubtitle: {
     color: '#666',
     fontSize: 14,
+  },
+  amountContainer: {
+    flexShrink: 0,
+    minWidth: 100,
+    alignItems: 'flex-end',
   },
   transactionAmount: {
     fontSize: 16,
@@ -357,3 +383,5 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
+
+export default Dashboard;
