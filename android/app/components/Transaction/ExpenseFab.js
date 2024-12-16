@@ -12,10 +12,10 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 
-const TransferFab = () => {
+const ExpenseFab = () => {
   const [amount, setAmount] = useState('');
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
+  const [category, setCategory] = useState('');
+  const [account, setAccount] = useState('');
   const [note, setNote] = useState('');
   const [description, setDescription] = useState('');
   const [showNumpad, setShowNumpad] = useState(false);
@@ -26,11 +26,11 @@ const TransferFab = () => {
       case 'amount':
         setAmount(prev => prev + num);
         break;
-      case 'from':
-        setFrom(prev => prev + num);
+      case 'category':
+        setCategory(prev => prev + num);
         break;
-      case 'to':
-        setTo(prev => prev + num);
+      case 'account':
+        setAccount(prev => prev + num);
         break;
       case 'note':
         setNote(prev => prev + num);
@@ -46,11 +46,11 @@ const TransferFab = () => {
       case 'amount':
         setAmount(prev => prev.slice(0, -1));
         break;
-      case 'from':
-        setFrom(prev => prev.slice(0, -1));
+      case 'category':
+        setCategory(prev => prev.slice(0, -1));
         break;
-      case 'to':
-        setTo(prev => prev.slice(0, -1));
+      case 'account':
+        setAccount(prev => prev.slice(0, -1));
         break;
       case 'note':
         setNote(prev => prev.slice(0, -1));
@@ -109,7 +109,7 @@ const TransferFab = () => {
           <TouchableOpacity>
             <MaterialIcons name="arrow-back" size={24} color="#ffd700" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Transfer</Text>
+          <Text style={styles.headerTitle}>Expense</Text>
           <TouchableOpacity>
             <MaterialIcons name="bookmark" size={20} color="#ffd700" />
           </TouchableOpacity>
@@ -120,11 +120,11 @@ const TransferFab = () => {
           <TouchableOpacity style={styles.tab}>
             <Text style={styles.tabText}>Income</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.tabText}>Expense</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={[styles.tab, styles.activeTab]}>
-            <Text style={[styles.tabText, styles.activeTabText]}>Transfer</Text>
+            <Text style={[styles.tabText, styles.activeTabText]}>Expense</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.tab}>
+            <Text style={styles.tabText}>Transfer</Text>
           </TouchableOpacity>
         </View>
 
@@ -140,8 +140,8 @@ const TransferFab = () => {
           </View>
 
           {renderField('Amount', amount, 'amount')}
-          {renderField('From', from, 'from')}
-          {renderField('To', to, 'to')}
+          {renderField('Category', category, 'category')}
+          {renderField('Account', account, 'account')}
           {renderField('Note', note, 'note')}
 
           <View style={styles.formRow}>
@@ -218,7 +218,7 @@ const TransferFab = () => {
   );
 };
 
-export default TransferFab;
+export default ExpenseFab;
 
 const styles = StyleSheet.create({
   container: {
