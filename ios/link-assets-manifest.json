@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "android/app/assets/fonts/Playwrite AR Guides.ttf",
+      "sha1": "3c6dc18568d28bfa0d7145dfd0c8300bacd1dfb0"
+    },
+    {
+      "path": "android/app/assets/fonts/Rubik.ttf",
+      "sha1": "80fbecd6d6cb21096b3e0277222e696c77ceb7eb"
+    },
+    {
+      "path": "android/app/assets/fonts/Satisfy.ttf",
+      "sha1": "fd2f096e9d0cd82b9f8e191d7f73167176d0f729"
+    },
+    {
+      "path": "android/app/assets/fonts/Source Code Pro.ttf",
+      "sha1": "9ce704281ee7f2eaaceea2ac5e55964105c8a5ff"
+    },
+    {
+      "path": "android/app/assets/fonts/Spicy Rice.ttf",
+      "sha1": "6d1105e5f57a04a36892cdf87541ba7ba8da9994"
+    }
+  ]
+}
