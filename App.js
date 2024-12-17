@@ -1,143 +1,173 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {PieChart} from 'react-native-svg-charts';
+import FeatherIcons from 'react-native-vector-icons/Feather';
 
-const Stats = () => {
-  // Sample data - replace with actual data
-  const data = {
-    income: 115000.0,
-    expenses: 10000.0,
-    categories: [
-      {
-        key: 'Apparel',
-        amount: 10000.0,
-        percentage: 100,
-        svg: {fill: '#FF6B6B'},
-        value: 100,
-        icon: 'checkroom',
-      },
-    ],
+const Expense = () => {
+  const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState('');
+  const [account, setAccount] = useState('');
+  const [note, setNote] = useState('');
+  const [description, setDescription] = useState('');
+  const [showNumpad, setShowNumpad] = useState(true);
+
+  const appendNumber = num => {
+    setAmount(prev => prev + num);
   };
+
+  const deleteNumber = () => {
+    setAmount(prev => prev.slice(0, -1));
+  };
+
+  const renderNumpadButton = value => (
+    <TouchableOpacity
+      style={styles.numpadButton}
+      onPress={() => appendNumber(value.toString())}>
+      <Text style={styles.numpadText}>{value}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.contentContainer}>
-        <ScrollView style={styles.scrollContent}>
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={styles.headerControls}>
-              <TouchableOpacity>
-                <MaterialIcons name="chevron-left" size={24} color="black" />
-              </TouchableOpacity>
-              <Text style={styles.headerTitle}>Dec 2024</Text>
-              <TouchableOpacity>
-                <MaterialIcons name="chevron-right" size={24} color="black" />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={styles.periodSelector}>
-              <Text>Monthly</Text>
-              <MaterialIcons name="arrow-drop-down" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Summary */}
-          <View style={styles.summary}>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Income</Text>
-              <Text style={styles.summaryAmount}>
-                £ {data.income.toFixed(2)}
-              </Text>
-            </View>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Expenses</Text>
-              <Text style={[styles.summaryAmount, styles.expenseText]}>
-                £ {data.expenses.toFixed(2)}
-              </Text>
-            </View>
-          </View>
-
-          {/* Pie Chart */}
-          <View style={styles.chartContainer}>
-            <PieChart
-              style={styles.chart}
-              data={data.categories}
-              innerRadius="90%"
-              padAngle={0}
-              valueAccessor={({item}) => item.value}
-            />
-            {data.categories.map((category, index) => (
-              <View key={index} style={styles.chartLabel}>
-                <MaterialIcons name={category.icon} size={24} color="#1a1a1a" />
-                <Text style={styles.chartLabelText}>
-                  {category.percentage.toFixed(1)} %
-                </Text>
-              </View>
-            ))}
-          </View>
-
-          {/* Category List */}
-          <View style={styles.categoryList}>
-            {data.categories.map((category, index) => (
-              <View key={index} style={styles.categoryItem}>
-                <View style={styles.categoryLeft}>
-                  <View
-                    style={[
-                      styles.percentageBadge,
-                      {backgroundColor: category.svg.fill},
-                    ]}>
-                    <Text style={styles.percentageBadgeText}>
-                      {category.percentage}%
-                    </Text>
-                  </View>
-                  <View style={styles.categoryInfo}>
-                    <MaterialIcons
-                      name={category.icon}
-                      size={24}
-                      color="#1a1a1a"
-                    />
-                    <Text style={styles.categoryName}>{category.key}</Text>
-                  </View>
-                </View>
-                <Text style={styles.categoryAmount}>
-                  £ {category.amount.toFixed(2)}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-
-        {/* Bottom Navigation */}
-        <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navItem}>
-            <MaterialIcons name="receipt-long" size={24} color="gray" />
-            <Text style={styles.navText}>Trans.</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity>
+            <MaterialIcons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-            <MaterialIcons name="bar-chart" size={24} color="#FF6B6B" />
-            <Text style={[styles.navText, styles.activeNavText]}>Stats</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <MaterialIcons
-              name="account-balance-wallet"
-              size={24}
-              color="gray"
-            />
-            <Text style={styles.navText}>Accounts</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <MaterialIcons name="more-horiz" size={24} color="gray" />
-            <Text style={styles.navText}>More</Text>
+          <Text style={styles.headerTitle}>Expense</Text>
+          <TouchableOpacity>
+            <MaterialIcons name="bookmark" size={20} color="#ff0000" />
           </TouchableOpacity>
         </View>
-      </View>
+
+        {/* Tab Navigation */}
+        <View style={styles.tabContainer}>
+          <TouchableOpacity style={styles.tab}>
+            <Text style={styles.tabText}>Income</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.tab, styles.activeTab]}>
+            <Text style={[styles.tabText, styles.activeTabText]}>Expense</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.tab}>
+            <Text style={styles.tabText}>Transfer</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Form Fields */}
+        <View style={styles.formContainer}>
+          <View style={styles.formRow}>
+            <Text style={styles.label}>Date</Text>
+            <View style={styles.dateContainer}>
+              <Text>13/12/2024 (Fri)</Text>
+              <Text>11:56 am</Text>
+              <FeatherIcons name="repeat" size={24} color="gray" />
+            </View>
+          </View>
+
+          <View style={styles.formRow}>
+            <Text style={styles.label}>Amount</Text>
+            <TextInput style={styles.input} value={amount} editable={false} />
+          </View>
+
+          <View style={styles.formRow}>
+            <Text style={styles.label}>Category</Text>
+            <TextInput
+              style={styles.input}
+              value={category}
+              onChangeText={setCategory}
+            />
+          </View>
+
+          <View style={styles.formRow}>
+            <Text style={styles.label}>Account</Text>
+            <TextInput
+              style={styles.input}
+              value={account}
+              onChangeText={setAccount}
+            />
+          </View>
+
+          <View style={styles.formRow}>
+            <Text style={styles.label}>Note</Text>
+            <TextInput
+              style={styles.input}
+              value={note}
+              onChangeText={setNote}
+            />
+          </View>
+
+          <View style={styles.formRow}>
+            <Text style={styles.label}>Description</Text>
+            <View style={styles.descriptionContainer}>
+              <TextInput
+                style={styles.input}
+                value={description}
+                onChangeText={setDescription}
+              />
+              <TouchableOpacity>
+                <MaterialIcons name="camera-alt" size={24} color="gray" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* Numpad */}
+        {showNumpad && (
+          <View style={styles.numpad}>
+            <View style={styles.numpadRow}>
+              {renderNumpadButton(1)}
+              {renderNumpadButton(2)}
+              {renderNumpadButton(3)}
+              <TouchableOpacity
+                style={styles.numpadButton}
+                onPress={deleteNumber}>
+                <MaterialIcons name="backspace" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.numpadRow}>
+              {renderNumpadButton(4)}
+              {renderNumpadButton(5)}
+              {renderNumpadButton(6)}
+              <TouchableOpacity style={styles.numpadButton}>
+                <Text style={styles.numpadText}>-</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.numpadRow}>
+              {renderNumpadButton(7)}
+              {renderNumpadButton(8)}
+              {renderNumpadButton(9)}
+              <TouchableOpacity style={styles.numpadButton}>
+                <MaterialIcons name="calculate" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.numpadRow}>
+              <View style={styles.numpadButton} />
+              {renderNumpadButton(0)}
+              <TouchableOpacity
+                style={styles.numpadButton}
+                onPress={() => appendNumber('.')}>
+                <Text style={styles.numpadText}>.</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.doneButton}>
+                <Text style={styles.doneButtonText}>Done</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -147,135 +177,107 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  contentContainer: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  scrollContent: {
-    flex: 1,
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
   },
-  headerControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '500',
-    marginHorizontal: 16,
   },
-  periodSelector: {
+  tabContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     padding: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    backgroundColor: '#f5f5f5',
   },
-  summary: {
-    flexDirection: 'row',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  summaryItem: {
+  tab: {
     flex: 1,
-  },
-  summaryLabel: {
-    color: '#666',
-    marginBottom: 4,
-  },
-  summaryAmount: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#666',
-  },
-  expenseText: {
-    color: '#000',
-  },
-  chartContainer: {
-    height: 300,
-    justifyContent: 'center',
+    padding: 8,
     alignItems: 'center',
   },
-  chart: {
-    height: 250,
+  activeTab: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ff6b6b',
   },
-  chartLabel: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
+  tabText: {
+    color: '#666',
   },
-  chartLabelText: {
-    marginLeft: 8,
-    fontSize: 16,
-    fontWeight: '500',
+  activeTabText: {
+    color: '#ff6b6b',
   },
-  categoryList: {
+  formContainer: {
     padding: 16,
-    paddingBottom: 32, // Added padding at bottom for better scrolling
   },
-  categoryItem: {
+  formRow: {
+    marginBottom: 16,
+  },
+  label: {
+    color: '#666',
+    marginBottom: 8,
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    padding: 8,
+  },
+  dateContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    padding: 8,
   },
-  categoryLeft: {
+  descriptionContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  numpad: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#f5f5f5',
+    padding: 8,
+  },
+  numpadRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  numpadButton: {
+    flex: 1,
+    aspectRatio: 1,
+    backgroundColor: '#fff',
+    margin: 4,
+    borderRadius: 8,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  percentageBadge: {
-    backgroundColor: '#FF6B6B',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 12,
+  numpadText: {
+    fontSize: 24,
   },
-  percentageBadgeText: {
+  doneButton: {
+    flex: 1,
+    aspectRatio: 1,
+    backgroundColor: '#ff6b6b',
+    margin: 4,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  doneButtonText: {
     color: '#fff',
-    fontSize: 12,
-  },
-  categoryInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  categoryName: {
-    marginLeft: 8,
-    fontSize: 16,
-  },
-  categoryAmount: {
     fontSize: 16,
     fontWeight: '500',
   },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    backgroundColor: '#fff',
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  activeNavItem: {
-    color: '#FF6B6B',
-  },
-  navText: {
-    marginTop: 4,
-    fontSize: 12,
-    color: 'gray',
-  },
-  activeNavText: {
-    color: '#FF6B6B',
-  },
 });
 
-export default Stats;
+export default Expense;

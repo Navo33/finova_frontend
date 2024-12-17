@@ -1,3 +1,6 @@
+// this is the old expense.js
+// not in use just to have the overview
+
 import React, {useState} from 'react';
 import {
   View,
@@ -9,7 +12,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-// import {MaterialIcons} from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FeatherIcons from 'react-native-vector-icons/Feather';
