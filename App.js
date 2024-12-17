@@ -1,359 +1,343 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
   View,
+  Text,
+  StyleSheet,
   TouchableOpacity,
+  SafeAreaView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-//import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FeatherIcons from 'react-native-vector-icons/Feather';
 
-const Header = () => (
-  <View style={styles.header}>
-    <View style={styles.headerCenter}>
-      {/* <Icon name="chevron-left" size={24} color="#ff0000" /> */}
-      <Text style={styles.headerTitle}>Dec 2023</Text>
-      <Text style={styles.headerTitle}>Dec 2024</Text>
-      {/* <Icon name="chevron-right" size={24} color="#ff0000" /> */}
-    </View>
-    <View style={styles.headerRight}>
-      <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="bookmark-outline" size={24} color="#ff0000" /> */}
+const TransferFab = () => {
+  const [amount, setAmount] = useState('');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [note, setNote] = useState('');
+  const [description, setDescription] = useState('');
+  const [showNumpad, setShowNumpad] = useState(false);
+  const [activeField, setActiveField] = useState(null);
+
+  const appendNumber = num => {
+    switch (activeField) {
+      case 'amount':
+        setAmount(prev => prev + num);
+        break;
+      case 'from':
+        setFrom(prev => prev + num);
+        break;
+      case 'to':
+        setTo(prev => prev + num);
+        break;
+      case 'note':
+        setNote(prev => prev + num);
+        break;
+      case 'description':
+        setDescription(prev => prev + num);
+        break;
+    }
+  };
+
+  const deleteNumber = () => {
+    switch (activeField) {
+      case 'amount':
+        setAmount(prev => prev.slice(0, -1));
+        break;
+      case 'from':
+        setFrom(prev => prev.slice(0, -1));
+        break;
+      case 'to':
+        setTo(prev => prev.slice(0, -1));
+        break;
+      case 'note':
+        setNote(prev => prev.slice(0, -1));
+        break;
+      case 'description':
+        setDescription(prev => prev.slice(0, -1));
+        break;
+    }
+  };
+
+  const handleFieldPress = fieldName => {
+    setShowNumpad(true);
+    setActiveField(fieldName);
+  };
+
+  const handleDone = () => {
+    setShowNumpad(false);
+    setActiveField(null);
+  };
+
+  const renderNumpadButton = value => (
+      <TouchableOpacity
+          style={styles.numpadButton}
+          onPress={() => appendNumber(value.toString())}>
+        <Text style={styles.numpadText}>{value}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="search" size={24} color="#ff0000" /> */}
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.iconButton}>
-        {/* <Icon name="query-stats" size={24} color="#ff0000" /> */}
-      </TouchableOpacity>
-    </View>
-  </View>
-);
+  );
 
-const TabBar = () => (
-  <View style={styles.tabBar}>
-    <TouchableOpacity style={styles.tabActive}>
-      <Text style={styles.tabTextActive}>Daily</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.tab}>
-      <Text style={styles.tabText}>Monthly</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.tab}>
-      <Text style={styles.tabText}>Total</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.tab}>
-      <Text style={styles.tabText}>Note</Text>
-    </TouchableOpacity>
-  </View>
-);
-
-const SummaryCard = () => (
-  <View style={styles.summaryCard}>
-    <View style={styles.summaryRow}>
-      <Text style={styles.summaryLabel}>Income</Text>
-      <Text style={styles.summaryLabel}>Expenses</Text>
-      <Text style={styles.summaryLabel}>Total</Text>
-    </View>
-    <View style={styles.summaryRow}>
-      <Text style={styles.summaryIncome}>1,000.00</Text>
-      <Text style={styles.summaryExpense}>10,000.00</Text>
-      <Text style={styles.summaryTotal}>105,000.00</Text>
-    </View>
-  </View>
-);
-
-const TransactionItem = ({category, title, subtitle, amount, isExpense}) => (
-  <View style={styles.transactionItem}>
-    <View style={styles.transactionLeft}>
-      <View style={styles.categoryIcon}>
-        <Text>{category}</Text>
+  const renderField = (label, value, fieldName) => (
+      <View style={styles.formRow}>
+        <Text
+            style={[styles.label, activeField === fieldName && styles.activeLabel]}>
+          {label}
+        </Text>
+        <TouchableOpacity onPress={() => handleFieldPress(fieldName)}>
+          <TextInput
+              style={[
+                styles.input,
+                activeField === fieldName && styles.activeInput,
+              ]}
+              value={value}
+              editable={false}
+              pointerEvents="none"
+          />
+        </TouchableOpacity>
       </View>
-      <View style={styles.transactionDetails}>
-        <Text style={styles.transactionTitle}>{title}</Text>
-        <Text style={styles.transactionSubtitle}>{subtitle}</Text>
-      </View>
-    </View>
-    <Text
-      style={[
-        styles.transactionAmount,
-        isExpense ? styles.expenseText : styles.incomeText,
-      ]}
-    >
-      £ {amount}
-    </Text>
-  </View>
-);
+  );
 
-const BottomTabBar = () => (
-  <View style={styles.bottomTabBar}>
-    <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="receipt" size={24} color="#FF5757" /> */}
-      <Text style={styles.bottomTabTextActive}>Trans.</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="bar-chart" size={24} color="#999" /> */}
-      <Text style={styles.bottomTabText}>Stats</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="account-balance-wallet" size={24} color="#999" /> */}
-      <Text style={styles.bottomTabText}>Accounts</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.bottomTab}>
-      {/* <Icon name="more-horiz" size={24} color="#999" /> */}
-      <Text style={styles.bottomTabText}>More</Text>
-    </TouchableOpacity>
-  </View>
-);
-
-const App = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      <Header />
-      <TabBar />
-      <ScrollView>
-        <SummaryCard />
-        <View style={styles.dateHeader}>
-          <Text style={styles.dateText}>10</Text>
-          <Text style={styles.dayText}>Tue</Text>
-          <Text style={styles.monthText}>12.2024</Text>
-        </View>
-        <TransactionItem
-          category="💰"
-          title="Loku aiya for the gift"
-          subtitle="Accounts → Accounts"
-          amount="32,000.00"
-          isExpense={false}
-        />
-        <TransactionItem
-          category="💰"
-          title="Uni savings"
-          subtitle="Cash"
-          amount="15,000.00"
-          isExpense={false}
-        />
-        <TransactionItem
-          category="👔"
-          title="Christmas dress"
-          subtitle="Cash"
-          amount="10,000.00"
-          isExpense={true}
-        />
-        <TransactionItem
-          category="🏅"
-          title="Christmas bonus"
-          subtitle="Accounts"
-          amount="100,000.00"
-          isExpense={false}
-        />
-      </ScrollView>
-      <TouchableOpacity style={styles.fab}>
-        {/* <Icon name="add" size={24} color="white" /> */}
-      </TouchableOpacity>
-      <BottomTabBar />
-    </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity>
+              <MaterialIcons name="arrow-back" size={24} color="#ffd700" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Transfer</Text>
+            <TouchableOpacity>
+              <MaterialIcons name="bookmark" size={20} color="#ffd700" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Tab Navigation */}
+          <View style={styles.tabContainer}>
+            <TouchableOpacity style={styles.tab}>
+              <Text style={styles.tabText}>Income</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.tab}>
+              <Text style={styles.tabText}>Expense</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.tab, styles.activeTab]}>
+              <Text style={[styles.tabText, styles.activeTabText]}>Transfer</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Form Fields */}
+          <View style={styles.formContainer}>
+            <View style={styles.formRow}>
+              <Text style={styles.label}>Date</Text>
+              <View style={styles.dateContainer}>
+                <Text>13/12/2024 (Fri)</Text>
+                <Text>11:56 am</Text>
+                <FeatherIcons name="repeat" size={24} color="gray" />
+              </View>
+            </View>
+
+            {renderField('Amount', amount, 'amount')}
+            {renderField('From', from, 'from')}
+            {renderField('To', to, 'to')}
+            {renderField('Note', note, 'note')}
+
+            <View style={styles.formRow}>
+              <Text
+                  style={[
+                    styles.label,
+                    activeField === 'description' && styles.activeLabel,
+                  ]}>
+                Description
+              </Text>
+              <View style={styles.descriptionContainer}>
+                <TouchableOpacity
+                    style={{flex: 1}}
+                    onPress={() => handleFieldPress('description')}>
+                  <TextInput
+                      style={[
+                        styles.input,
+                        activeField === 'description' && styles.activeInput,
+                      ]}
+                      value={description}
+                      editable={false}
+                      pointerEvents="none"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          {/* Numpad */}
+          {showNumpad && (
+              <View style={styles.numpad}>
+                <View style={styles.numpadRow}>
+                  {renderNumpadButton(1)}
+                  {renderNumpadButton(2)}
+                  {renderNumpadButton(3)}
+                  <TouchableOpacity
+                      style={styles.numpadButton}
+                      onPress={deleteNumber}>
+                    <MaterialIcons name="backspace" size={24} color="#ffd700" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.numpadRow}>
+                  {renderNumpadButton(4)}
+                  {renderNumpadButton(5)}
+                  {renderNumpadButton(6)}
+                  <TouchableOpacity style={styles.numpadButton}>
+                    <Text style={styles.numpadText}>-</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.numpadRow}>
+                  {renderNumpadButton(7)}
+                  {renderNumpadButton(8)}
+                  {renderNumpadButton(9)}
+                  <TouchableOpacity style={styles.numpadButton}>
+                    <MaterialIcons name="calculate" size={24} color="#ffd700" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.numpadRow}>
+                  <View style={styles.numpadButton} />
+                  {renderNumpadButton(0)}
+                  <TouchableOpacity
+                      style={styles.numpadButton}
+                      onPress={() => appendNumber('.')}>
+                    <Text style={styles.numpadText}>.</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
+                    <Text style={styles.doneButtonText}>Done</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+          )}
+        </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 
-export default App;
+export default TransferFab;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
   },
   header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  headerCenter: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'row',
+    backgroundColor: '#000',
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginHorizontal: 16,
+    fontSize: 20,
+    fontWeight: '500',
+    color: '#ffd700',
+    fontFamily: 'Spicy Rice',
   },
-  headerRight: {
+  tabContainer: {
     flexDirection: 'row',
-  },
-  iconButton: {
-    marginLeft: 16,
-  },
-  tabBar: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    padding: 8,
+    backgroundColor: '#333333',
   },
   tab: {
     flex: 1,
-    padding: 12,
+    padding: 8,
     alignItems: 'center',
   },
-  tabActive: {
-    flex: 1,
-    padding: 12,
-    alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#FF5757',
+  activeTab: {
+    backgroundColor: '#333333',
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#ffd700',
   },
   tabText: {
-    color: '#999',
+    color: '#ffd700',
+    fontFamily: 'Spicy Rice',
   },
-  tabTextActive: {
-    color: '#FF5757',
+  activeTabText: {
+    color: '#ffd700',
   },
-  summaryCard: {
+  formContainer: {
     padding: 16,
-    backgroundColor: '#fff',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    margin: 16,
-    borderRadius: 8,
+    backgroundColor: '#000',
+    paddingTop: 0,
   },
-  summaryRow: {
+  formRow: {
+    marginBottom: 16,
+  },
+  label: {
+    color: '#666',
+    marginBottom: 8,
+  },
+  activeLabel: {
+    color: '#ffd700',
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#333333',
+    padding: 8,
+  },
+  activeInput: {
+    borderBottomColor: '#ffd700',
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333333',
+    padding: 8,
+  },
+  descriptionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333333',
+  },
+  numpad: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#000',
+    padding: 8,
+  },
+  numpadRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  summaryLabel: {
-    color: '#666',
+  numpadButton: {
     flex: 1,
-    textAlign: 'center',
-  },
-  summaryIncome: {
-    color: '#4CAF50',
-    flex: 1,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  summaryExpense: {
-    color: '#F44336',
-    flex: 1,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  summaryTotal: {
-    color: '#0000FF',
-    flex: 1,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  dateHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  dateText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 8,
-  },
-  dayText: {
-    backgroundColor: '#ddd',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    marginRight: 8,
-  },
-  monthText: {
-    color: '#666',
-  },
-  transactionItem: {
-    flexDirection: 'row',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  transactionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  categoryIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    alignItems: 'center',
+    aspectRatio: 1,
+    backgroundColor: '#333333',
+    margin: 4,
+    borderRadius: 8,
     justifyContent: 'center',
-    marginRight: 12,
+    alignItems: 'center',
   },
-  transactionDetails: {
+  numpadText: {
+    fontSize: 24,
+    color: '#fff',
+    fontFamily: 'Spicy Rice',
+  },
+  doneButton: {
     flex: 1,
+    aspectRatio: 1,
+    backgroundColor: '#ffd700',
+    margin: 4,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  transactionTitle: {
+  doneButtonText: {
+    color: '#000',
     fontSize: 16,
-    marginBottom: 4,
-  },
-  transactionSubtitle: {
-    color: '#666',
-    fontSize: 14,
-  },
-  transactionAmount: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  incomeText: {
-    color: '#4CAF50',
-  },
-  expenseText: {
-    color: '#FF5757',
-  },
-  fab: {
-    position: 'absolute',
-    right: 16,
-    bottom: 80,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#FF5757',
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  bottomTabBar: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    paddingVertical: 8,
-    backgroundColor: '#fff',
-  },
-  bottomTab: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bottomTabText: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 4,
-  },
-  bottomTabTextActive: {
-    fontSize: 12,
-    color: '#FF5757',
-    marginTop: 4,
+    fontFamily: 'Spicy Rice',
   },
 });
