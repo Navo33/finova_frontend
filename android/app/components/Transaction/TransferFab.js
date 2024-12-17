@@ -9,24 +9,66 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 
-const Expense = () => {
+const TransferFab = () => {
   const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
-  const [account, setAccount] = useState('');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
   const [note, setNote] = useState('');
   const [description, setDescription] = useState('');
-  const [showNumpad, setShowNumpad] = useState(true);
+  const [showNumpad, setShowNumpad] = useState(false);
+  const [activeField, setActiveField] = useState(null);
 
   const appendNumber = num => {
-    setAmount(prev => prev + num);
+    switch (activeField) {
+      case 'amount':
+        setAmount(prev => prev + num);
+        break;
+      case 'from':
+        setFrom(prev => prev + num);
+        break;
+      case 'to':
+        setTo(prev => prev + num);
+        break;
+      case 'note':
+        setNote(prev => prev + num);
+        break;
+      case 'description':
+        setDescription(prev => prev + num);
+        break;
+    }
   };
 
   const deleteNumber = () => {
-    setAmount(prev => prev.slice(0, -1));
+    switch (activeField) {
+      case 'amount':
+        setAmount(prev => prev.slice(0, -1));
+        break;
+      case 'from':
+        setFrom(prev => prev.slice(0, -1));
+        break;
+      case 'to':
+        setTo(prev => prev.slice(0, -1));
+        break;
+      case 'note':
+        setNote(prev => prev.slice(0, -1));
+        break;
+      case 'description':
+        setDescription(prev => prev.slice(0, -1));
+        break;
+    }
+  };
+
+  const handleFieldPress = fieldName => {
+    setShowNumpad(true);
+    setActiveField(fieldName);
+  };
+
+  const handleDone = () => {
+    setShowNumpad(false);
+    setActiveField(null);
   };
 
   const renderNumpadButton = value => (
@@ -37,6 +79,26 @@ const Expense = () => {
     </TouchableOpacity>
   );
 
+  const renderField = (label, value, fieldName) => (
+    <View style={styles.formRow}>
+      <Text
+        style={[styles.label, activeField === fieldName && styles.activeLabel]}>
+        {label}
+      </Text>
+      <TouchableOpacity onPress={() => handleFieldPress(fieldName)}>
+        <TextInput
+          style={[
+            styles.input,
+            activeField === fieldName && styles.activeInput,
+          ]}
+          value={value}
+          editable={false}
+          pointerEvents="none"
+        />
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -45,11 +107,11 @@ const Expense = () => {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity>
-            <MaterialIcons name="arrow-back" size={24} color="black" />
+            <MaterialIcons name="arrow-back" size={24} color="#ffd700" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Expense</Text>
+          <Text style={styles.headerTitle}>Transfer</Text>
           <TouchableOpacity>
-            <MaterialIcons name="bookmark" size={20} color="#ff0000" />
+            <MaterialIcons name="bookmark" size={20} color="#ffd700" />
           </TouchableOpacity>
         </View>
 
@@ -58,11 +120,11 @@ const Expense = () => {
           <TouchableOpacity style={styles.tab}>
             <Text style={styles.tabText}>Income</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.tab, styles.activeTab]}>
-            <Text style={[styles.tabText, styles.activeTabText]}>Expense</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.tab}>
-            <Text style={styles.tabText}>Transfer</Text>
+            <Text style={styles.tabText}>Expense</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.tab, styles.activeTab]}>
+            <Text style={[styles.tabText, styles.activeTabText]}>Transfer</Text>
           </TouchableOpacity>
         </View>
 
@@ -77,48 +139,32 @@ const Expense = () => {
             </View>
           </View>
 
-          <View style={styles.formRow}>
-            <Text style={styles.label}>Amount</Text>
-            <TextInput style={styles.input} value={amount} editable={false} />
-          </View>
+          {renderField('Amount', amount, 'amount')}
+          {renderField('From', from, 'from')}
+          {renderField('To', to, 'to')}
+          {renderField('Note', note, 'note')}
 
           <View style={styles.formRow}>
-            <Text style={styles.label}>Category</Text>
-            <TextInput
-              style={styles.input}
-              value={category}
-              onChangeText={setCategory}
-            />
-          </View>
-
-          <View style={styles.formRow}>
-            <Text style={styles.label}>Account</Text>
-            <TextInput
-              style={styles.input}
-              value={account}
-              onChangeText={setAccount}
-            />
-          </View>
-
-          <View style={styles.formRow}>
-            <Text style={styles.label}>Note</Text>
-            <TextInput
-              style={styles.input}
-              value={note}
-              onChangeText={setNote}
-            />
-          </View>
-
-          <View style={styles.formRow}>
-            <Text style={styles.label}>Description</Text>
+            <Text
+              style={[
+                styles.label,
+                activeField === 'description' && styles.activeLabel,
+              ]}>
+              Description
+            </Text>
             <View style={styles.descriptionContainer}>
-              <TextInput
-                style={styles.input}
-                value={description}
-                onChangeText={setDescription}
-              />
-              <TouchableOpacity>
-                <MaterialIcons name="camera-alt" size={24} color="gray" />
+              <TouchableOpacity
+                style={{flex: 1}}
+                onPress={() => handleFieldPress('description')}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    activeField === 'description' && styles.activeInput,
+                  ]}
+                  value={description}
+                  editable={false}
+                  pointerEvents="none"
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -134,7 +180,7 @@ const Expense = () => {
               <TouchableOpacity
                 style={styles.numpadButton}
                 onPress={deleteNumber}>
-                <MaterialIcons name="backspace" size={24} color="black" />
+                <MaterialIcons name="backspace" size={24} color="#ffd700" />
               </TouchableOpacity>
             </View>
             <View style={styles.numpadRow}>
@@ -150,7 +196,7 @@ const Expense = () => {
               {renderNumpadButton(8)}
               {renderNumpadButton(9)}
               <TouchableOpacity style={styles.numpadButton}>
-                <MaterialIcons name="calculate" size={24} color="black" />
+                <MaterialIcons name="calculate" size={24} color="#ffd700" />
               </TouchableOpacity>
             </View>
             <View style={styles.numpadRow}>
@@ -161,7 +207,7 @@ const Expense = () => {
                 onPress={() => appendNumber('.')}>
                 <Text style={styles.numpadText}>.</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.doneButton}>
+              <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
                 <Text style={styles.doneButtonText}>Done</Text>
               </TouchableOpacity>
             </View>
@@ -172,25 +218,30 @@ const Expense = () => {
   );
 };
 
+export default TransferFab;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: '#000',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: '500',
+    color: '#ffd700',
+    fontFamily: 'Spicy Rice',
   },
   tabContainer: {
     flexDirection: 'row',
     padding: 8,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#333333',
   },
   tab: {
     flex: 1,
@@ -198,19 +249,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeTab: {
-    backgroundColor: '#fff',
+    backgroundColor: '#333333',
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ff6b6b',
+    borderWidth: 2,
+    borderColor: '#ffd700',
   },
   tabText: {
-    color: '#666',
+    color: '#ffd700',
+    fontFamily: 'Spicy Rice',
   },
   activeTabText: {
-    color: '#ff6b6b',
+    color: '#ffd700',
   },
   formContainer: {
     padding: 16,
+    backgroundColor: '#000',
+    paddingTop: 0,
   },
   formRow: {
     marginBottom: 16,
@@ -219,17 +273,23 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 8,
   },
+  activeLabel: {
+    color: '#ffd700',
+  },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#333333',
     padding: 8,
+  },
+  activeInput: {
+    borderBottomColor: '#ffd700',
   },
   dateContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#333333',
     padding: 8,
   },
   descriptionContainer: {
@@ -237,14 +297,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#333333',
   },
   numpad: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#000',
     padding: 8,
   },
   numpadRow: {
@@ -255,7 +315,7 @@ const styles = StyleSheet.create({
   numpadButton: {
     flex: 1,
     aspectRatio: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#333333',
     margin: 4,
     borderRadius: 8,
     justifyContent: 'center',
@@ -263,21 +323,21 @@ const styles = StyleSheet.create({
   },
   numpadText: {
     fontSize: 24,
+    color: '#fff',
+    fontFamily: 'Spicy Rice',
   },
   doneButton: {
     flex: 1,
     aspectRatio: 1,
-    backgroundColor: '#ff6b6b',
+    backgroundColor: '#ffd700',
     margin: 4,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
   doneButtonText: {
-    color: '#fff',
+    color: '#000',
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'Spicy Rice',
   },
 });
-
-export default Expense;
