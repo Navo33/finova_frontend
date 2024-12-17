@@ -11,7 +11,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {PieChart} from 'react-native-svg-charts';
 
 const Stats = () => {
-  // Sample data - replace with actual data
   const data = {
     income: 115000.0,
     expenses: 10000.0,
