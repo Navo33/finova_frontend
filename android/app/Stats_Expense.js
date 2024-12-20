@@ -14,7 +14,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // import Pie from 'react-native-pie';
 import {PieChart} from 'react-native-svg-charts';
 
-const Stats = () => {
+const Stats_Expense = () => {
   const pieData = [
     {
       key: 1,
@@ -101,7 +101,7 @@ const Stats = () => {
   );
 };
 
-export default Stats;
+export default Stats_Expense;
 
 const styles = StyleSheet.create({
   container: {

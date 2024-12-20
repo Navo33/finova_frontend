@@ -14,23 +14,23 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // import Pie from 'react-native-pie';
 import {PieChart} from 'react-native-svg-charts';
 
-const Stats = () => {
+const Stats_Income = () => {
   const pieData = [
     {
       key: 1,
-      type: 'Clothing',
+      type: 'Salary',
       value: 20,
       svg: {fill: '#ff0000'},
     },
     {
       key: 2,
-      type: 'Food',
+      type: 'Allowance',
       value: 30,
       svg: {fill: '#00ff00'},
     },
     {
       key: 3,
-      type: 'Entertainment',
+      type: 'Bonus',
       value: 34,
       svg: {fill: '#0000ff'},
     },
@@ -63,13 +63,13 @@ const Stats = () => {
 
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>Income LKR 100 000</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={[styles.tab, styles.activeTab]}>
           <Text style={[styles.tabText, styles.activeTabText]}>
-            Expense LKR 40 000
+            Income LKR 100 000
           </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tab}>
+          <Text style={styles.tabText}>Expense LKR 40 000</Text>
         </TouchableOpacity>
       </View>
 
@@ -101,7 +101,7 @@ const Stats = () => {
   );
 };
 
-export default Stats;
+export default Stats_Income;
 
 const styles = StyleSheet.create({
   container: {
