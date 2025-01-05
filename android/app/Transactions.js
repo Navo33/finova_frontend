@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import FeatherIcons from 'react-native-vector-icons/Feather';
-import TransactionItem from '../components/Transaction/TransactionItem';
-import Header from '../components/Transaction/Header';
-import TabBar from '../components/Transaction/Tabbar';
-import BottomTabBar from '../components/Transaction/BottomTab';
-import SummaryCard from '../components/Transaction/SummaryCard';
-import Fab from '../components/Transaction/ExpenseFab';
+import TransactionItem from './components/Transaction/TransactionItem';
+import Header from './components/Transaction/Header';
+import TabBar from './components/Transaction/TabBar';
+import BottomTabBar from './components/Transaction/BottomTab';
+import SummaryCard from './components/Transaction/SummaryCard';
+import Fab from './components/Transaction/ExpenseFab';
 
 const Transactions = () => {
   const [isFabVisible, setFabVisible] = useState(false);
