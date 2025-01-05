@@ -1,244 +1,141 @@
-import React, {useState, useRef} from 'react';
 import {
+  SafeAreaView,
   StyleSheet,
-  View,
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
-  Animated,
+  Image,
+  Alert,
 } from 'react-native';
-import Video from 'react-native-video';
+import React, {useState, useEffect} from 'react';
+import {useForm, Controller} from 'react-hook-form';
 
-const FloatingLabelInput = ({label, value, onChangeText, ...props}) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const animatedValue = useRef(new Animated.Value(value ? 1 : 0)).current;
+const Login = ({navigation}) => {
+  const [greeting, setGreeting] = useState('');
 
-  const handleFocus = () => {
-    setIsFocused(true);
-    Animated.timing(animatedValue, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-    if (!value) {
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }).start();
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      setGreeting('Good Morning');
+    } else if (currentHour < 18) {
+      setGreeting('Good Afternoon');
+    } else {
+      setGreeting('Good Evening');
     }
+  }, []);
+
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
+
+  const onSubmit = data => {
+    console.log(data);
+    Alert.alert('Login successful!');
+    navigation.navigate('Transactions'); // Navigate to Transactions
   };
-
-  const labelStyle = {
-    position: 'absolute',
-    left: 16,
-    top: animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [12, -10],
-    }),
-    fontSize: animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [16, 12],
-    }),
-    color: animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['#fff', 'cyan'],
-    }),
-    paddingHorizontal: 4,
-  };
-
-  return (
-    <View
-      style={[
-        styles.inputContainer,
-        {borderColor: isFocused ? 'cyan' : 'transparent'},
-      ]}>
-      <Animated.Text style={labelStyle}>{label}</Animated.Text>
-      <TextInput
-        {...props}
-        style={styles.input}
-        value={value}
-        onChangeText={onChangeText}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
-    </View>
-  );
-};
-
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const loadingProgress = useRef(new Animated.Value(0)).current;
-
-  const handleLogin = () => {
-    setIsLoading(true);
-    Animated.timing(loadingProgress, {
-      toValue: 1,
-      duration: 2000,
-      useNativeDriver: false,
-    }).start(() => {
-      console.log('Login pressed with:', {email, password});
-      setIsLoading(false);
-      loadingProgress.setValue(0);
-    });
-  };
-
-  const buttonWidth = loadingProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['100%', '50%'],
-  });
 
   return (
     <SafeAreaView style={styles.container}>
-      <Video
-        source={require('./app/assets/videos/backgroundVideo.mp4')}
-        style={styles.bgvideo}
-        muted={true}
-        resizeMode="cover"
-        rate={1.0}
-        repeat
-        ignoreSilentSwitch="obey"
+      <Image
+        source={require('./assets/images/login/login.jpg')}
+        style={styles.image}
+        resizeMode="contain"
       />
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Welcome Back!</Text>
+      <Text style={styles.greeting}>{greeting}!</Text>
 
-        <FloatingLabelInput
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+      <Controller
+        name="email"
+        control={control}
+        render={({field: {onChange, onBlur, value}}) => (
+          <TextInput
+            placeholder="Email"
+            style={styles.input}
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
+          />
+        )}
+        rules={{
+          required: true,
+          minLength: 13,
+          maxLength: 50,
+          pattern: /^\S+@\S+$/,
+        }}
+      />
+      {errors.email && <Text style={styles.error}>Email is required</Text>}
 
-        <FloatingLabelInput
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+      <Controller
+        name="password"
+        control={control}
+        render={({field: {onChange, onBlur, value}}) => (
+          <TextInput
+            placeholder="Password"
+            style={styles.input}
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
+          />
+        )}
+        rules={{required: true, minLength: 6, maxLength: 12}}
+      />
+      {errors.password && (
+        <Text style={styles.error}>Password is required</Text>
+      )}
 
-        <Animated.View style={[styles.buttonContainer, {width: buttonWidth}]}>
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={handleLogin}
-            disabled={isLoading}>
-            <Text style={styles.loginButtonText}>
-              {isLoading ? 'Loading...' : 'Login'}
-            </Text>
-            {isLoading && (
-              <Animated.View
-                style={[
-                  styles.progressBar,
-                  {
-                    width: loadingProgress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ['0%', '100%'],
-                    }),
-                  },
-                ]}
-              />
-            )}
-          </TouchableOpacity>
-        </Animated.View>
-
-        <TouchableOpacity style={styles.registerContainer}>
-          <Text style={styles.registerText}>
-            Don't have an account?{' '}
-            <Text style={styles.registerLink}>Register now!</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.loginContainer}
+        onPress={handleSubmit(onSubmit)}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
+export default Login;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  bgvideo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-  formContainer: {
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    // backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 30,
-    paddingVertical: 20,
-    alignSelf: 'center',
-    width: '90%',
+    borderWidth: 0.1,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  inputContainer: {
+  image: {
+    width: '100%',
+    height: 100,
     marginBottom: 20,
-    height: 50,
-    borderWidth: 2, // For the border
-    borderRadius: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    color: '#fff',
+  },
+  greeting: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   input: {
-    height: '100%',
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: '#fff',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    width: '80%',
+    borderColor: '#d1d1d1',
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
-  buttonContainer: {
-    alignSelf: 'center',
+  error: {
+    color: 'red',
+    marginBottom: 20,
   },
-  loginButton: {
-    backgroundColor: 'cyan',
-    height: 50,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-    overflow: 'hidden',
+  loginContainer: {
+    width: '80%',
+    borderRadius: 10,
+    padding: 10,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    backgroundColor: '#f0c404',
   },
-  loginButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  progressBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    height: 2,
-    backgroundColor: '#fff',
-  },
-  registerContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  registerText: {
-    fontSize: 14,
-    color: '#fff',
-  },
-  registerLink: {
-    color: 'cyan',
-    fontWeight: '600',
+  loginText: {
+    color: '#000',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
-
-export default Login;
