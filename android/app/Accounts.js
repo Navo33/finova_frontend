@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import BottomTabBar from './components/Transaction/BottomTab';
 
 const Accounts = () => {
   const summaryData = {
@@ -101,24 +102,7 @@ const Accounts = () => {
         ))}
       </ScrollView>
 
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Icon name="receipt" size={24} color="#666" />
-          <Text style={styles.navText}>Trans.</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Icon name="insert-chart" size={24} color="#666" />
-          <Text style={styles.navText}>Stats</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navItem, styles.activeNav]}>
-          <Icon name="account-balance-wallet" size={24} color="#ff6b6b" />
-          <Text style={[styles.navText, styles.activeNavText]}>Accounts</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Icon name="more-horiz" size={24} color="#666" />
-          <Text style={styles.navText}>More</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomTabBar />
     </SafeAreaView>
   );
 };
@@ -217,28 +201,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    backgroundColor: '#fff',
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  navText: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-  },
-  activeNav: {
-    color: '#ff6b6b',
-  },
-  activeNavText: {
-    color: '#ff6b6b',
-  },
+  // bottomNav: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  //   padding: 12,
+  //   borderTopWidth: 1,
+  //   borderTopColor: '#eee',
+  //   backgroundColor: '#fff',
+  // },
+  // navItem: {
+  //   alignItems: 'center',
+  // },
+  // navText: {
+  //   fontSize: 12,
+  //   color: '#666',
+  //   marginTop: 4,
+  // },
+  // activeNav: {
+  //   color: '#ff6b6b',
+  // },
+  // activeNavText: {
+  //   color: '#ff6b6b',
+  // },
 });
 
 export default Accounts;

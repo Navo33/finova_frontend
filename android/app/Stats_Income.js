@@ -13,6 +13,8 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // import Pie from 'react-native-pie';
 import {PieChart} from 'react-native-svg-charts';
+import BottomTabBar from './components/Transaction/BottomTab';
+import {useNavigation} from '@react-navigation/native';
 
 const Stats_Income = () => {
   const pieData = [
@@ -48,6 +50,13 @@ const Stats_Income = () => {
     },
   ];
 
+  const navigation = useNavigation();
+
+  const onExpense = () => {
+    console.log('Navigating to Expense');
+    navigation.navigate('Stats_Expense');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -68,7 +77,7 @@ const Stats_Income = () => {
             Income LKR 100 000
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
+        <TouchableOpacity style={styles.tab} onPress={onExpense}>
           <Text style={styles.tabText}>Expense LKR 40 000</Text>
         </TouchableOpacity>
       </View>
@@ -97,6 +106,8 @@ const Stats_Income = () => {
           ))}
         </ScrollView>
       </View>
+
+      <BottomTabBar />
     </SafeAreaView>
   );
 };

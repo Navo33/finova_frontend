@@ -17,7 +17,7 @@ import SummaryCard from './components/Transaction/SummaryCard';
 import Fab from './components/Transaction/ExpenseFab';
 import {useNavigation} from '@react-navigation/native';
 
-const Transactions = () => {
+const Trans_Note = () => {
   const [isFabVisible, setFabVisible] = useState(false);
 
   const navigation = useNavigation();
@@ -66,7 +66,7 @@ const Transactions = () => {
       <SummaryCard />
       <View style={styles.dateHeader}>
         <Text style={styles.dateText}>10</Text>
-        <Text style={styles.dayText}>Tuesday</Text>
+        <Text style={styles.dayText}>Sunday</Text>
         <Text style={styles.monthText}>12.2024</Text>
       </View>
       <ScrollView>
@@ -92,7 +92,7 @@ const Transactions = () => {
   );
 };
 
-export default Transactions;
+export default Trans_Note;
 
 const styles = StyleSheet.create({
   container: {
